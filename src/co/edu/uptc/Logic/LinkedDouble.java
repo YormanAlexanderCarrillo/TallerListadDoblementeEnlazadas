@@ -40,14 +40,37 @@ public class LinkedDouble <T>{
   }
 
   public void addNodeBeforeTo(Node<T> before, T info){
-        Node<T> node = new Node<>(info);
-        node.setNext(before);
-        node.setPrevious(before.getPrevious());
-        before.getPrevious().setNext(node);
-        before.setPrevious(node);
+        try {
+            if (isEmpty()){
+                head = last = new Node(info);
+            }else{
+                Node<T> node = new Node<>(info);
+                node.setNext(before);
+                node.setPrevious(before.getPrevious());
+                before.getPrevious().setNext(node);
+                before.setPrevious(node);
+            }
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+
+
   }
 
   public void  addNodeAfterTo(Node<T> after, T info){
+        try {
+            if (isEmpty()){
+                head = last = new Node(info);
+            }else{
+                Node<T> node = new Node<>(info);
+                node.setNext(after.getNext());
+                after.getNext().setPrevious(node);
+                node.setPrevious(after);
+                after.setNext(node);
+            }
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
 
   }
 
@@ -59,7 +82,6 @@ public class LinkedDouble <T>{
       Node<T> aux = head;
       while (aux != null) {
           if (comparator.compare(node, aux.getInfo())==0) {
-            //  System.out.println(id);
               return aux;
           }
           aux = aux.getNext();
@@ -82,7 +104,27 @@ public class LinkedDouble <T>{
   }
 
   public T deleteNode(Node<T> delete){
+      if (delete == null) {
+          return null;
+      }
 
+      if (delete == head) {
+          head = delete.getNext();
+      }
+
+      if (delete == last) {
+          last = delete.getPrevious();
+      }
+
+      if (delete.getPrevious() != null) {
+        //  delete.getPrevious() = delete.getNext();
+          delete.setNext(delete.getPrevious());
+      }
+
+      if (delete.getNext() != null) {
+       //   delete.getNext().getPrevious() = delete.getPrevious();
+          delete.setPrevious(delete.getNext());
+      }
       return null;
   }
 

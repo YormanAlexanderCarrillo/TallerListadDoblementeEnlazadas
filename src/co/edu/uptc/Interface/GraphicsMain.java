@@ -182,7 +182,6 @@ public class GraphicsMain {
     }
 
     //Accion del boton eliminar
-
     public void delete(ActionEvent e) {
         id = Integer.parseInt(tfId.getText());
         brand = tfBrand.getText();
