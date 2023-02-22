@@ -14,7 +14,7 @@ import java.util.Vector;
 public class GraphicsMain {
     JFrame frame;
     JPanel panel;
-    JButton buttonCreate, buttonRead, buttonUpdate, buttonDelete;
+    JButton buttonAccept, buttonRead, buttonUpdate, buttonDelete;
     JLabel jlId, jlBrand, jlmodel, jlSize, jlAmbientLight, jlAutoFocus;
     JTextField tfId, tfBrand, tfModel, tfSize;
     JComboBox CBAmbientLigth, CBAutoFocus;
@@ -24,7 +24,7 @@ public class GraphicsMain {
     JRadioButton radioButtonAddLast ;
     JRadioButton radioButtonAddBeforeTo;
     JRadioButton radioButtonAddAfterTo;
-    JRadioButton radioButtonFindNode;
+    JRadioButton radioButtonFindInfo;
     JRadioButton radioButtonGetList;
     JRadioButton radioButtonGetsize;
     JRadioButton radioButtonGetObjetc;
@@ -35,10 +35,11 @@ public class GraphicsMain {
     public GraphicsMain() {
         initComponents();
         vector();
-        actionButtonCreate();
+        actionButtonAccept();
         actionButtonRead();;
         actionButtonUpdate();
         actionButtonDelete();
+        //actionJRadioBtn();
 
     }
     public void vector(){
@@ -64,19 +65,19 @@ public class GraphicsMain {
         CBAmbientLigth= new JComboBox(vector);
         CBAutoFocus = new JComboBox(vector);
 
-        buttonCreate = new JButton("Crear");
+        buttonAccept = new JButton("Crear");
         buttonRead = new JButton("Leer");
         buttonUpdate = new JButton("Actualizar");
         buttonDelete = new JButton("Eliminar");
 
 
         frame.setVisible(true);
-        frame.setSize(600, 500);
+        frame.setSize(600, 400);
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
-        panel.setBounds(5, 5, 575, 450);
+        panel.setBounds(5, 5, 575, 350);
         panel.setBackground(Color.decode("#9C9C9C"));
         panel.setLayout(null);
 
@@ -98,7 +99,7 @@ public class GraphicsMain {
         jlAutoFocus.setBounds(30, 250, 100, 30 );
         CBAutoFocus.setBounds(150, 250, 120, 30);
 
-        radioButtonAddFirst = new JRadioButton("Add First", false);
+        radioButtonAddFirst = new JRadioButton("Add First", true);
         radioButtonAddFirst.setBounds(330, 50, 100, 30);
         radioButtonAddFirst.setBackground(Color.decode("#9C9C9C"));
         radioButtonAddFirst.setFocusable(false);
@@ -118,10 +119,10 @@ public class GraphicsMain {
         radioButtonAddAfterTo.setBackground(Color.decode("#9C9C9C"));
         radioButtonAddAfterTo.setFocusable(false);
 
-        radioButtonFindNode = new JRadioButton("Find Node", false);
-        radioButtonFindNode.setBounds(330,130,100,30);
-        radioButtonFindNode.setBackground(Color.decode("#9C9C9C"));
-        radioButtonFindNode.setFocusable(false);
+        radioButtonFindInfo = new JRadioButton("Find Info", false);
+        radioButtonFindInfo.setBounds(330,130,100,30);
+        radioButtonFindInfo.setBackground(Color.decode("#9C9C9C"));
+        radioButtonFindInfo.setFocusable(false);
 
         radioButtonGetList = new JRadioButton("Get List", false);
         radioButtonGetList.setBounds(440, 130, 100, 30);
@@ -143,16 +144,16 @@ public class GraphicsMain {
         buttonGroup.add(radioButtonAddLast);
         buttonGroup.add(radioButtonAddBeforeTo);
         buttonGroup.add(radioButtonAddAfterTo);
-        buttonGroup.add(radioButtonFindNode);
+        buttonGroup.add(radioButtonFindInfo);
         buttonGroup.add(radioButtonGetList);
         buttonGroup.add(radioButtonGetsize);
         buttonGroup.add(radioButtonGetObjetc);
 
 
-        buttonCreate.setBounds(30, 400, 100, 30);
-        buttonRead.setBounds(140, 400, 100,30);
-        buttonUpdate.setBounds(250, 400, 100, 30);
-        buttonDelete.setBounds(360, 400, 100, 30);
+        buttonAccept.setBounds(370, 220, 130, 40);
+        buttonRead.setBounds(250, 300, 100,30);
+        buttonUpdate.setBounds(360, 300, 100, 30);
+        buttonDelete.setBounds(470, 300, 100, 30);
 
 
 
@@ -174,11 +175,11 @@ public class GraphicsMain {
         panel.add(radioButtonAddLast);
         panel.add(radioButtonAddBeforeTo);
         panel.add(radioButtonAddAfterTo);
-        panel.add(radioButtonFindNode);
+        panel.add(radioButtonFindInfo);
         panel.add(radioButtonGetList);
         panel.add(radioButtonGetsize);
         panel.add(radioButtonGetObjetc);
-        panel.add(buttonCreate);
+        panel.add(buttonAccept);
         panel.add(buttonRead);
         panel.add(buttonUpdate);
         panel.add(buttonDelete);
@@ -190,7 +191,7 @@ public class GraphicsMain {
     boolean autoFocus;
     boolean ambientLigth ;
     //Accion boton de crear
-    public void Create(ActionEvent e) {
+    public void Accept(ActionEvent e) {
         try {
             id = Integer.parseInt(tfId.getText());
             brand = tfBrand.getText();
@@ -198,31 +199,56 @@ public class GraphicsMain {
             size = Integer.parseInt(tfSize.getText());
             ambientLigth = (boolean) CBAmbientLigth.getSelectedItem();
             autoFocus = (boolean) CBAutoFocus.getSelectedItem();
-
-            if (id != 0 && brand != null && model != null && size != 0){
+            if (id != 0 && brand != null && model != null && size != 0 && radioButtonAddFirst.isSelected()){
                 ld.addNodeFirst(new VideoBeam(id, brand, model, size, ambientLigth,autoFocus));
-                JOptionPane.showMessageDialog(null, "Agregado");
-            }else{
+                JOptionPane.showMessageDialog(null, "Agregado first");
+                cleanTxt();
+            }else if (id != 0 && brand != null && model != null && size != 0 && radioButtonAddLast.isSelected()){
+                ld.addNodeLast(new VideoBeam(id, brand, model, size, ambientLigth,autoFocus));
+                JOptionPane.showMessageDialog(null, "Agregado last");
+                cleanTxt();
+            }else  if (id != 0 && brand != null && model != null && size != 0 && radioButtonAddBeforeTo.isSelected()){
+                int idAux = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id de referencia para insertar antes"));
+                ld.addNodeBeforeTo(ld.findNode(new VideoBeam(idAux, null, null, 0, false, false)), new VideoBeam(id, brand, model, size, ambientLigth,autoFocus));
+                JOptionPane.showMessageDialog(null, "Agregado antes del id " + idAux);
+                cleanTxt();
+            } else if (id != 0 && brand != null && model != null && size != 0 && radioButtonAddAfterTo.isSelected()) {
+                int idAux = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id de referencia para insertar despues"));
+                ld.addNodeBeforeTo(ld.findNode(new VideoBeam(idAux, null, null, 0, false, false)), new VideoBeam(id, brand, model, size, ambientLigth,autoFocus));
+                JOptionPane.showMessageDialog(null, "Agregado despues del id " + idAux);
+                cleanTxt();
+            } else if (radioButtonFindInfo.isSelected()) {
+                int idAux = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id para la informacion"));
+                System.out.println(ld.findInfo(new VideoBeam(idAux, null, null, 0, false,false)));
+            } else if (radioButtonGetList.isSelected()) {
+                System.out.println(ld.getLinkedList(false));
+            } else if (radioButtonGetsize.isSelected()) {
+                JOptionPane.showMessageDialog(null, "El tamaño es de: " + ld.getSize());
+            } else if (radioButtonGetObjetc.isSelected()) {
+                int pos = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el indice a mostrar"));
+                JOptionPane.showMessageDialog(null, ld.getObject(pos));
+            } else{
                 JOptionPane.showMessageDialog(null, "Los campos estan vacios !!!");
             }
         }catch (Exception ex){
             System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Los campos no son validos");
         }
 
     }
 
-    public void actionButtonCreate() {
-        buttonCreate.addActionListener(new ActionListener() {
+    public void actionButtonAccept() {
+        buttonAccept.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Create(e);
+                Accept(e);
             }
         });
     }
 
     //accion del boton Leer
     public void Read(ActionEvent e) {
-        System.out.println(ld.getLinkedList(true));
+        System.out.println(ld.getLinkedList(false));
         System.out.println("tamaño: " + ld.getSize());
         System.out.println(ld.findNode(new VideoBeam(12, null, null, 0, false , false)));
 
@@ -270,5 +296,33 @@ public class GraphicsMain {
                 delete(e);
             }
         });
+    }
+
+  /*  public void actionJRadioBtn() {
+        radioButtonFindInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                validateJRadioBtn(e);
+            }
+        });
+
+    }
+
+    // Metodo para validar seleccion de de radioButton
+    public void validateJRadioBtn(ActionEvent e) {
+
+        if (radioButtonFindInfo.isSelected()) {
+            tfBrand.setEditable(false);
+            tfId.setEditable(false);
+            tfModel.setEditable(false);
+            tfSize.setEditable(false);
+        }
+
+    }*/
+    public void cleanTxt() {
+        tfId.setText("");
+        tfBrand.setText("");
+        tfModel.setText("");
+        tfSize.setText("");
     }
 }

@@ -92,7 +92,13 @@ public class LinkedDouble<T> {
     }
 
     public T findInfo(T info) {
-
+        Node<T> aux = head;
+        while (aux != null) {
+            if (comparator.compare(info, aux.getInfo()) == 0) {
+                return aux.getInfo();
+            }
+            aux = aux.getNext();
+        }
         return info;
     }
 
