@@ -113,9 +113,15 @@ public class LinkedDouble<T> {
     }
 
     public T deleteNode(Node<T> delete) {
-        if (head == delete) {
-            head = head.getNext();
-            head.setPrevious(null);
+        if (head == delete && last == delete) {
+            head = null;
+            last = null;
+        } else if(delete == head) {
+            delete.getNext().setPrevious(null);
+           head = delete.getNext();
+        } else if (delete== last) {
+            delete.getPrevious().setNext(null);
+            last = delete.getPrevious();
         } else {
            delete.getPrevious().setNext(delete.getNext());
            delete.getNext().setPrevious(delete.getPrevious());
